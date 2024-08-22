@@ -1,5 +1,4 @@
 import torch 
-import torchvision 
 import torch.nn as nn 
 import transformers
 import torch.nn.functional as F 
@@ -8,6 +7,26 @@ from transformers import AutoModel, AutoTokenizer, AutoImageProcessor, DeiTConfi
 
 
 
+
+class ImageEmbedding(nn.Module):
+    def __init__(self, output_size=768):
+        super(ImageEmbedding, self).__init__()
+        self.process = AutoImageProcessor.from_pretrained('facebook/deit-base-distilled-patch16-224')
+        self.model = DeiTModel.from_pretrained('facebook/deit-base-distilled-patch16-224')
+
+        for param in self.model.parameters():
+            param.requires_grad = False
+
+    def forward(self, image):
+        inputs = self.process(image, return_tensors="pt")
+        with torch.no_grad():
+            outputs = self.model(**inputs.to(device))
+
+        image_embedding = outputs.last_hidden_state
+        return image_embedding
+    
+    
+    
 class ImageEncoder(nn.Module):
     def __init__(self, d_model=1024):
         super(ImageEncoder, self).__init__()

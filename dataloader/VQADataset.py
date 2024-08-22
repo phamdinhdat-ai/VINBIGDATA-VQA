@@ -23,7 +23,7 @@ class VQADataset(Dataset):
         
         
     def load_json(self):
-        with open(f"{self.root}/Annotations/Annotations/{mode}.json", 'r') as f:
+        with open(f"{self.root}/Annotations/Annotations/{self.mode}.json", 'r') as f:
             data = json.load(f)
             
         df = pd.DataFrame(data)
