@@ -3,10 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F 
 
 
-from fusion_layer import StackedAttentionNets
-from encoders.backboneEncoder import ImageEmbedding, ImageEncoder
-from encoders.text_encoder import QuesEmbedding, AnsEmbedding
-from decoders.encoder_layers import Decoder, DecoderLayer, SequentialDecoder
+from .fusion_layer import StackedAttentionNets
+
+from models.encoders.backboneEncoder import ImageEmbedding, ImageEncoder
+from models.encoders.text_encoder import QuesEmbedding, AnsEmbedding
+from models.decoders.decoder_layers import Decoder, DecoderLayer, SequentialDecoder
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 BATCH_SIZE = 256
@@ -62,3 +63,6 @@ class VQAModel(nn.Module):
 
         output_logits = self.mlp(out)
         return output_logits, ans_vocab
+    
+    
+    

@@ -33,9 +33,6 @@ class QuesEmbedding(nn.Module):
 
 
 
-
-
-
 class TextEncoder(nn.Module):
     def __init__(self, d_model, max_len = 128):
         super(TextEncoder, self).__init__()
@@ -67,8 +64,6 @@ class TextEncoder(nn.Module):
 
         
         
-
-        
 class AnsEmbedding(nn.Module):
     def __init__(self, input_size=768):
         super(AnsEmbedding, self).__init__()
@@ -92,7 +87,7 @@ class AnsEmbedding(nn.Module):
             return_attention_mask=False
         )
 
-        outputs = self.gpt2_model(**tokenized_input.to(device))
+        outputs = self.gpt2_model(**tokenized_input.to(self.device))
         hidden_states = outputs.last_hidden_state
 
         return tokenized_input['input_ids'], hidden_states

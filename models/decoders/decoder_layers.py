@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F 
 
-from layers import LayerNormalization, MultiHeadAttention, PositionwiseFeedForward, MultiHeadCrossAttention
+from .layers import LayerNormalization, MultiHeadAttention, PositionwiseFeedForward, MultiHeadCrossAttention
 
 
 class DecoderLayer(nn.Module):
