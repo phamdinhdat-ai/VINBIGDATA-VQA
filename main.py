@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F 
 import torch.optim as optim
 # from torchvision import transforms
-
+from trainer import trainer
 
 from dataloader.VQADataset import VQADataset
 from models.model import VQAModel
@@ -32,5 +32,17 @@ optimizer = optim.AdamW(model.parameters(), lr=0.0001)
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 print(f'The model has {count_parameters(model):,} trainable parameters.')
+
+
+
+epochs = 5
+batch_size = 2 
+train_loader = "..."
+val_loader = "..."
+vocal_swap = ''
+earlystop = ''
+log_results = True, 
+save_checkpoint = True 
+
 
 

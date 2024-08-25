@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from utils.utils import find_most_common_answer, select_most_common_answers , segment_text
 
+
 root = "./vizvwiz"
 
 class VQADataset(Dataset):
@@ -41,3 +42,10 @@ class VQADataset(Dataset):
         if self.transform:
             img = self.transform(img)
         return img, question, list_answers, answer_type, answerable, answer
+        
+
+if __name__ == '__main__':
+    
+    train_dataset = VQADataset(root=root, mode ="train", transform=None)
+    val_dataset = VQADataset(root=root, mode="val", transform=None)
+    test_dataset = VQADataset(root=root, mode="val", transform=None)

@@ -42,7 +42,7 @@ def trainer(model,
             optimizer, 
             vocab_swap, 
             num_epochs = 10,
-            batch_size = 256, 
+            batch_size = 1, 
             earlystop = True,
             log_results = True, 
             save_checkpoint = True
