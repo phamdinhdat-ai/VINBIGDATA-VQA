@@ -1,10 +1,7 @@
 import torch
 import torch.nn as nn 
 import torch.nn.functional as F 
-
-
-
-
+import math
 
 def scaled_dot_product(q, k, v, mask=None):
     d_k = q.size()[-1]
