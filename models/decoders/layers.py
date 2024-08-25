@@ -3,9 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F 
 import math
 
+<<<<<<< HEAD
 
 
     
+=======
+>>>>>>> 34a0376516b71b6176e09cb77cbe1a8b3bc12904
 def scaled_dot_product(q, k, v, mask=None):
     d_k = q.size()[-1]
     scaled = torch.matmul(q, k.transpose(-1, -2)) / math.sqrt(d_k)
