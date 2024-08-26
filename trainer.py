@@ -3,16 +3,17 @@ import os
 import matplotlib.pyplot as plt 
 from sklearn.metrics import accuracy_score, f1_score
 import pickle 
+import json
 
 
-model = ''
-train_loader = ''
-val_loader = ''
-batch_size = 10 
-device= 'cuda:0'
-vocab_swap = []
-criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.AdamW()
+# model = ''
+# train_loader = ''
+# val_loader = ''
+# batch_size = 10 
+# device= 'cuda:0'
+# vocab_swap = []
+# criterion = torch.nn.CrossEntropyLoss()
+# optimizer = torch.optim.AdamW()
 
 
 
@@ -59,6 +60,7 @@ def trainer(model,
     train_vqa_scores = []
     val_vqa_scores = []
     history = dict()
+    temp_val_loss = torch.inf
     for epoch in range(num_epochs):
         # Training phase
         model.train()
@@ -138,12 +140,13 @@ def trainer(model,
 
         # Validation phase
         model.eval()
+        
         total_val_loss = 0.0
         total_val_accuracy = 0.0
         total_val_f1 = 0.0
         total_val_vqa = 0.0
         total_val_batches = 0
-
+        
         with torch.no_grad():
             for batch_idx, batch in enumerate(val_loader):
                 images, questions, answers_list, answer_types, answerables, answers = batch
@@ -163,7 +166,7 @@ def trainer(model,
                     # Calculate accuracy, F1 score, and VQA score
                     accuracy = accuracy_score(answers_flat, predictions_flat)
                     f1 = f1_score(answers_flat, predictions_flat, average='macro')
-
+                    
                     preds = []
                     for i in range(batch_size):
                         predicted_sentence = "".join([vocab_swap[idx.item()] for idx in predictions[i] if idx.item() != 50256])
@@ -188,7 +191,13 @@ def trainer(model,
         avg_val_accuracy = total_val_accuracy / total_val_batches
         avg_val_f1 = total_val_f1 / total_val_batches
         avg_val_vqa = total_val_vqa / total_val_batches
-
+        if save_checkpoint is True and temp_val_loss > avg_val_loss:
+            temp_val_loss = avg_val_loss
+            if not os.path.exists("./result"):
+                os.makedirs(f'./result', exist_ok=True)
+                torch.save(model, f'./result/best_model_{batch_size}_{temp_val_loss}.pt')
+            else:
+                torch.save(model, f'./result/best_model_{batch_size}_{temp_val_loss}.pt')
         val_losses.append(avg_val_loss)
         val_accuracy_scores.append(avg_val_accuracy)
         val_f1_scores.append(avg_val_f1)
@@ -210,6 +219,12 @@ def trainer(model,
     history['val_acc'] = val_accuracy_scores
     history['val_f1_score'] = val_f1_scores
     history['val_vqa_score'] = val_vqa_scores
+    
+    if save_checkpoint and  not os.path.exists(f"./result"):
+        os.makedirs(f"./result")
+        with open(f"./result/history_{batch_size}_{temp_val_loss}.json", 'w') as f:
+            json.dumps(history, f)
+        
     return history
 
 
